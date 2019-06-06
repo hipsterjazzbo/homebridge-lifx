@@ -24,6 +24,7 @@ var lifxLanObj;
 var lifx_lan;
 var use_lan;
 var fade_duration;
+var exclude;
 
 function LIFxPlatform(log, config){
     // auth info
@@ -42,6 +43,8 @@ function LIFxPlatform(log, config){
         fade_duration = Math.round(fade_duration * 1000);
     }
 
+    this.exclude  = config['exclude'] || [];
+
     this.log = log;
 }
 
@@ -56,6 +59,10 @@ LIFxPlatform.prototype = {
             var bulbs = JSON.parse(body);
 
             for(var i = 0; i < bulbs.length; i ++) {
+                if (that.exclude.includes(bulb.label)) {
+                    continue;
+                }
+
                 var accessory = new LIFxBulbAccessory(that.log, bulbs[i]);
                 foundAccessories.push(accessory);
             }
@@ -307,9 +314,9 @@ module.exports.platform = LIFxPlatform;
 var Service, Characteristic;
 
 module.exports = function(homebridge) {
-  Service = homebridge.hap.Service;
-  Characteristic = homebridge.hap.Characteristic;
+    Service = homebridge.hap.Service;
+    Characteristic = homebridge.hap.Characteristic;
 
-  homebridge.registerAccessory("homebridge-lifx-bulb", "LIFxBulb", LIFxBulbAccessory);
-  homebridge.registerPlatform("homebridge-lifx", "LIFx", LIFxPlatform);
+    homebridge.registerAccessory("homebridge-lifx-bulb", "LIFxBulb", LIFxBulbAccessory);
+    homebridge.registerPlatform("homebridge-lifx", "LIFx", LIFxPlatform);
 };
