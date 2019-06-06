@@ -59,7 +59,7 @@ LIFxPlatform.prototype = {
             var bulbs = JSON.parse(body);
 
             for(var i = 0; i < bulbs.length; i ++) {
-                if (that.exclude.includes(bulb.label)) {
+                if (that.exclude.includes(bulb[i].label)) {
                     continue;
                 }
 
